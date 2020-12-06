@@ -1,0 +1,9 @@
+[submodule "datazen"]
+	path = datazen
+	url = git@github.com:vkottler/datazen.git
+[submodule "mk"]
+	path = mk
+	url = git@github.com:vkottler/mk.git
+[submodule "keybinds"]
+	path = keybinds
+	url = git@github.com:vkottler/keybinds.git
