@@ -7,3 +7,6 @@
 [submodule "keybinds"]
 	path = keybinds
 	url = git@github.com:vkottler/keybinds.git
+[submodule "config"]
+	path = config
+	url = git@github.com:vkottler/config.git
