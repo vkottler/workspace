@@ -10,3 +10,6 @@
 [submodule "config"]
 	path = config
 	url = git@github.com:vkottler/config.git
+[submodule "vmklib"]
+	path = vmklib
+	url = git@github.com:vkottler/vmklib.git
