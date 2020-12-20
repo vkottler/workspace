@@ -13,3 +13,6 @@
 [submodule "vmklib"]
 	path = vmklib
 	url = git@github.com:vkottler/vmklib.git
+[submodule "vtelem"]
+	path = vtelem
+	url = git@github.com:vkottler/vtelem.git
