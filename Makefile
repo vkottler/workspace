@@ -1,10 +1,13 @@
 .PHONY: all clean
 
-.DEFAULT_GOAL  := all
+.DEFAULT_GOAL  := all update
 PROJ           := workspace
 $(PROJ)_DIR    := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
-include $($(PROJ)_DIR)/mk/conf.mk
+update:
+	git submodule update --init --recursive
+
+-include $($(PROJ)_DIR)/mk/conf.mk
 
 all: $(GRIP_PREFIX)render
 
