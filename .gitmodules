@@ -19,3 +19,6 @@
 [submodule "vkottler.github.io"]
 	path = vkottler.github.io
 	url = git@github.com:vkottler/vkottler.github.io.git
+[submodule "console"]
+	path = console
+	url = git@github.com:vkottler/console.git
