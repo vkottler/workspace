@@ -22,3 +22,6 @@
 [submodule "console"]
 	path = console
 	url = git@github.com:vkottler/console.git
+[submodule "python-package-template"]
+	path = python-package-template
+	url = git@github.com:vkottler/python-package-template.git
