@@ -25,3 +25,6 @@
 [submodule "python-package-template"]
 	path = python-package-template
 	url = git@github.com:vkottler/python-package-template.git
+[submodule "svgen"]
+	path = svgen
+	url = git@github.com:vkottler/svgen.git
