@@ -1,15 +1,16 @@
-.PHONY: all clean
+###############################################################################
+MK_INFO := https://pypi.org/project/vmklib
+ifeq (,$(shell which mk))
+	$(warning "No 'mk' in $(PATH), install 'vmklib' with 'pip' ($(MK_INFO))")
+endif
+ifndef MK_AUTO
+	$(error target this Makefile with 'mk', not '$(MAKE)' ($(MK_INFO)))
+endif
+###############################################################################
 
-.DEFAULT_GOAL  := all update
-PROJ           := workspace
-$(PROJ)_DIR    := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+.PHONY: clean
 
-update:
-	git submodule update --init --recursive
-
--include $($(PROJ)_DIR)/mk/conf.mk
-
-all: $(GRIP_PREFIX)render
+.DEFAULT_GOAL := update
 
 clean:
 	@rm -rf $(BUILD_DIR)
