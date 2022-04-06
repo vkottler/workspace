@@ -28,3 +28,6 @@
 [submodule "svgen"]
 	path = svgen
 	url = git@github.com:vkottler/svgen.git
+[submodule "vcorelib"]
+	path = vcorelib
+	url = git@github.com:vkottler/vcorelib.git
