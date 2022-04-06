@@ -2,3 +2,6 @@
 build
 venv2*
 venv3*
+dotfiles
+third-party
+tags
