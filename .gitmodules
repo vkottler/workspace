@@ -28,3 +28,6 @@
 [submodule "vcorelib"]
 	path = vcorelib
 	url = git@github.com:vkottler/vcorelib.git
+[submodule "setuptools-wrapper"]
+	path = setuptools-wrapper
+	url = git@github.com:vkottler/setuptools-wrapper.git
