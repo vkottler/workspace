@@ -18,9 +18,13 @@ $($(PROJ)_DIR)/dotfiles:
 $($(PROJ)_DIR)/third-party:
 	ln -s ~/third-party
 
-env: $($(PROJ)_DIR)/dotfiles $($(PROJ)_DIR)/third-party
+$($(PROJ)_DIR)/scripts/$(PROJ):
+	ln -s $($(PROJ)_DIR)/$(PROJ) $@
 
-edit: $(PY_PREFIX)edit
+env: $($(PROJ)_DIR)/dotfiles $($(PROJ)_DIR)/third-party \
+     $($(PROJ)_DIR)/scripts/$(PROJ)
+
+edit: $(PY_PREFIX)edit env
 
 py-script-%: | $(VENV_CONC) env
 	cd $($(PROJ)_DIR) && $(PYTHON) $($(PROJ)_DIR)/scripts/$*.py

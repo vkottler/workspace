@@ -5,3 +5,5 @@ venv3*
 dotfiles
 third-party
 tags
+scripts/workspace
+__pycache__

@@ -1,77 +1,58 @@
 #!/usr/bin/env python
 
 """
-pull_all - A simple script to update all of the submodules.
+A simple script to update all of the submodules.
 """
 
 # built-in
 from multiprocessing import Pool
 from pathlib import Path
+from subprocess import CalledProcessError, run
 import sys
-from typing import Iterator
 
 # third-party
 from git import Repo
 
-
-def get_submodules(start: Path) -> Iterator[Repo]:
-    """Find all top-level submodules are contained by a start path."""
-
-    for item in start.iterdir():
-        if item.is_dir() and item.joinpath(".git").is_file():
-            yield Repo(item)
-
-
-def pull_config(repo: Repo, parent: str) -> None:
-    """
-    If a given repository has a 'config' submodule, try and pull the latest.
-    """
-
-    config_path = Path(str(repo.working_tree_dir), "config")
-    if config_path.joinpath(".git").is_file():
-        config = Repo(config_path)
-        if config.is_dirty():
-            print("Note: {parent}'s 'config' has local changes.")
-
-        for remote in config.remotes:
-
-            # Remove any HTTP[S] remotes.
-            if remote.url.startswith("http"):
-                print(
-                    f"Repository '{parent}' has remote '{remote}' "
-                    f"with URL '{remote.url}'."
-                )
-
-            # Ensure that 'origin' has the correct URI.
+# internal
+from workspace.git import (
+    DEFAULT_MAIN_BRANCH,
+    DEFAULT_ORIGIN,
+    get_submodules,
+    repo_fetcher,
+)
 
 
-def repo_fetcher(repo: Repo, remote: str = "origin") -> None:
-    """Fetch from a given remote for a repository."""
+def repo_entry(
+    repo: Repo,
+    remote: str = DEFAULT_ORIGIN,
+    main_branch: str = DEFAULT_MAIN_BRANCH,
+) -> None:
+    """Perform common tasks on a workspace repository."""
 
-    if remote in repo.remotes:
-        remote = repo.remotes[remote]
-        name = Path(str(repo.working_tree_dir)).name
+    # Update the repository.
+    repo_fetcher(repo, remote, main_branch)
 
-        dirty = repo.is_dirty()
-        if dirty:
-            print("Note: '{name}' has local changes.")
-        fetcher = "fetch" if dirty else "pull"
+    # If it has a 'manifest.yaml' run datazen.
+    repo_root = Path(str(repo.working_tree_dir))
+    if repo_root.joinpath("manifest.yaml").is_file():
+        try:
+            result = run(["mk", "-C", str(repo_root), "dz-sync"], check=True)
+            print(f"Syncing datazen result: {result.returncode}.")
+        except CalledProcessError as exc:
+            print(f"Failed to sync datazen ({repo_root.name}): {exc}")
 
-        # Pull from the remote.
-        print(f"Running '{fetcher}' on '{name}'.")
-        for info in getattr(remote, fetcher)():
-            if info.note:
-                print(info.note)
-
-        # Attempt to update the 'config' submodule.
-        pull_config(repo, name)
+    print(f"Status for '{repo_root.name}':")
+    for diff in repo.index.diff(None):
+        print(diff)
+    if repo.untracked_files:
+        print(repo.untracked_files)
 
 
 def main() -> int:
     """Script entry."""
 
     with Pool() as pool:
-        pool.map(repo_fetcher, get_submodules(Path.cwd()))
+        pool.map(repo_entry, get_submodules(Path.cwd()))
 
     return 0
 
