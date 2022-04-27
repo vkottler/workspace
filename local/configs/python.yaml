@@ -1,0 +1,8 @@
+---
+packages:
+  - datazen
+  - setuptools-wrapper
+  - svgen
+  - vcorelib
+  - vmklib
+  - vtelem
