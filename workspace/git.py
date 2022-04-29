@@ -4,10 +4,13 @@ Useful git interactions for workspace repositories.
 
 # built-in
 from pathlib import Path
-from typing import Iterator
+from typing import Callable, Iterator
 
 # third-party
 from git import Repo
+
+# internal
+from workspace.data import configs
 
 DEFAULT_ORIGIN = "origin"
 DEFAULT_MAIN_BRANCH = "master"
@@ -18,12 +21,30 @@ def github_ssh_url(user: str, repo: str) -> str:
     return f"git@github.com:{user}/{repo}.git"
 
 
-def get_submodules(start: Path) -> Iterator[Repo]:
+def get_submodules(
+    start: Path, filter_fn: Callable[[Path], bool] = None
+) -> Iterator[Repo]:
     """Find all top-level submodules are contained by a start path."""
 
+    def default_filter(_: Path) -> bool:
+        return True
+
+    if filter_fn is None:
+        filter_fn = default_filter
+
     for item in start.iterdir():
-        if item.is_dir() and item.joinpath(".git").is_file():
+        if (
+            item.is_dir()
+            and item.joinpath(".git").is_file()
+            and filter_fn(item)
+        ):
             yield Repo(item)
+
+
+def get_python_submodules(start: Path) -> Iterator[Repo]:
+    """Get all submodules that are Python packages."""
+    projects = configs()["python"]["packages"]
+    return get_submodules(start, lambda x: x.name in projects)
 
 
 def align_repo(
