@@ -31,5 +31,7 @@ py-script-%: | $(VENV_CONC) env
 
 update: py-script-pull_all
 
+docs: py-script-package_pydoc
+
 clean:
 	@rm -rf $(BUILD_DIR)

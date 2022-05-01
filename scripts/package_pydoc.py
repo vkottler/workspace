@@ -6,9 +6,10 @@ A simple script to generate Python documentation for each python project.
 
 # built-in
 from multiprocessing import Pool
-from os import walk
+from os import linesep, walk
+from os.path import join
 from pathlib import Path
-from shutil import move
+from shutil import move, rmtree
 import sys
 from typing import Iterator, Tuple
 
@@ -56,6 +57,10 @@ def repo_entry(
 
             dest = PYDOC_DEST.joinpath(rel)
             dest.mkdir(parents=True, exist_ok=True)
+
+            if source.name == "__init__.py":
+                source_html_name = Path(f"{pkg_slug}.html")
+                dest = dest.parent
             dest_html = dest.joinpath(source_html_name)
             dest_html.unlink(True)
 
@@ -65,8 +70,48 @@ def repo_entry(
             source_html.unlink(True)
 
 
+def create_index(dest: Path) -> None:
+    """Create the index.html file in the destination."""
+
+    # Always completely re-generate the output.
+    rmtree(dest, ignore_errors=True)
+    dest.mkdir(parents=True)
+
+    symlinks = []
+
+    # Prepare to generate an index.html in the root.
+    for submodule in get_python_submodules(Path.cwd()):
+        root = Path(str(submodule.working_tree_dir))
+        slug = root.name.replace("-", "_")
+        symlink = dest.joinpath(slug)
+        symlink.symlink_to(root.joinpath(slug), True)
+        symlinks.append(symlink)
+
+    # Generate an __init__.html and move it to index.html.
+    init = dest.joinpath("__init__.py")
+    with init.open("w", encoding="utf-8") as init_fd:
+        for symlink in symlinks:
+            init_fd.write(f"import {symlink.name}")
+            init_fd.write(linesep)
+
+    # Generate the output file.
+    python_cmd(
+        ["-w", join(".", "__init__.py")],
+        "pydoc",
+        location=dest,
+    )
+    init.unlink()
+    move(str(init.with_suffix(".html")), dest.joinpath("index.html"))
+
+    # Remove symbolic links.
+    for symlink in symlinks:
+        symlink.unlink()
+
+
 def main() -> int:
     """Script entry."""
+
+    # create_index(PYDOC_DEST)
 
     with Pool() as pool:
         pool.map(repo_entry, get_python_submodules(Path.cwd()))
