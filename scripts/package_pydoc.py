@@ -45,23 +45,33 @@ def repo_entry(
 
     for source, rel in python_sources(root, pkg_slug):
         try:
+            src_arg = source.parent.name
+
+            # Add the relative path to the module root.
+            src_curr = source.parent
+            while src_curr.name != pkg_slug:
+                if src_curr.name != source.parent.name:
+                    src_arg = f"{src_curr.name}.{src_arg}"
+                src_curr = src_curr.parent
+
+            if src_arg != pkg_slug:
+                src_arg = f"{pkg_slug}.{src_arg}"
+
+            if source.name != "__init__.py":
+                src_arg = f"{src_arg}.{Path(source.name).stem}"
+
             # Write the documentation and obtain the path to the output.
             python_cmd(
-                ["-w", str(source)],
+                ["-w", src_arg],
                 "pydoc",
                 root=root,
                 location=root,
             )
-            source_html_name = Path(source.name).with_suffix(".html")
+
+            source_html_name = Path(f"{src_arg}.html")
             source_html = root.joinpath(source_html_name)
 
-            dest = PYDOC_DEST.joinpath(rel)
-            dest.mkdir(parents=True, exist_ok=True)
-
-            if source.name == "__init__.py":
-                source_html_name = Path(f"{pkg_slug}.html")
-                dest = dest.parent
-            dest_html = dest.joinpath(source_html_name)
+            dest_html = Path(PYDOC_DEST, source_html.name)
             dest_html.unlink(True)
 
             # Move the generated file to the intended destination.
@@ -111,8 +121,7 @@ def create_index(dest: Path) -> None:
 def main() -> int:
     """Script entry."""
 
-    # create_index(PYDOC_DEST)
-
+    create_index(PYDOC_DEST)
     with Pool() as pool:
         pool.map(repo_entry, get_python_submodules(Path.cwd()))
 
