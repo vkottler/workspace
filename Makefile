@@ -18,11 +18,14 @@ $($(PROJ)_DIR)/dotfiles:
 $($(PROJ)_DIR)/third-party:
 	ln -s ~/third-party
 
+$($(PROJ)_DIR)/local/configs:
+	ln -s $($(PROJ)_DIR)/vkottler/local/configs $@
+
 $($(PROJ)_DIR)/scripts/$(PROJ):
 	ln -s $($(PROJ)_DIR)/$(PROJ) $@
 
 env: $($(PROJ)_DIR)/dotfiles $($(PROJ)_DIR)/third-party \
-     $($(PROJ)_DIR)/scripts/$(PROJ)
+     $($(PROJ)_DIR)/scripts/$(PROJ) $($(PROJ)_DIR)/local/configs
 
 edit: $(PY_PREFIX)edit env
 

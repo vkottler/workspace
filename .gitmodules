@@ -31,3 +31,6 @@
 [submodule "setuptools-wrapper"]
 	path = setuptools-wrapper
 	url = git@github.com:vkottler/setuptools-wrapper.git
+[submodule "vkottler"]
+	path = vkottler
+	url = git@github.com:vkottler/vkottler.git
