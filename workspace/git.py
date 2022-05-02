@@ -8,6 +8,7 @@ from typing import Callable, Iterator
 
 # third-party
 from git import Repo
+from git.exc import GitCommandError
 
 # internal
 from workspace.data import configs
@@ -76,9 +77,13 @@ def align_repo(
 
         # Pull from the remote.
         print(f"Running '{fetcher}' on '{name}'.")
-        for info in getattr(remote, fetcher)():
-            if info.note:
-                print(info.note)
+        try:
+            for info in getattr(remote, fetcher)():
+                if info.note:
+                    print(info.note)
+        except GitCommandError as exc:
+            print(f"'{fetcher}' failed on '{name}': {exc}")
+            raise exc
 
 
 def pull_config(

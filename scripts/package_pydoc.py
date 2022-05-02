@@ -43,7 +43,7 @@ def repo_entry(
     root = Path(str(repo.working_tree_dir))
     pkg_slug = root.name.replace("-", "_")
 
-    for source, rel in python_sources(root, pkg_slug):
+    for source, _ in python_sources(root, pkg_slug):
         try:
             src_arg = source.parent.name
 
