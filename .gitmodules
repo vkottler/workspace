@@ -34,3 +34,9 @@
 [submodule "vkottler"]
 	path = vkottler
 	url = git@github.com:vkottler/vkottler.git
+[submodule "video-production"]
+	path = video-production
+	url = git@github.com:vkottler/video-production.git
+[submodule "music"]
+	path = music
+	url = git@github.com:vkottler/music.git
