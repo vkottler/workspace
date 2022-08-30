@@ -18,13 +18,17 @@ $($(PROJ)_DIR)/dotfiles:
 $($(PROJ)_DIR)/third-party:
 	ln -s ~/third-party
 
-$($(PROJ)_DIR)/local/configs:
+$($(PROJ)_DIR)/local/configs: $(BUILD_DIR)/init.txt
 	ln -s $($(PROJ)_DIR)/vkottler/local/configs $@
 
 $($(PROJ)_DIR)/scripts/$(PROJ):
 	ln -s $($(PROJ)_DIR)/$(PROJ) $@
 
-env: $($(PROJ)_DIR)/dotfiles $($(PROJ)_DIR)/third-party \
+$(BUILD_DIR)/init.txt:
+	git submodule update --init --recursive
+	touch $@
+
+env: $(BUILD_DIR)/init.txt $($(PROJ)_DIR)/dotfiles $($(PROJ)_DIR)/third-party \
      $($(PROJ)_DIR)/scripts/$(PROJ) $($(PROJ)_DIR)/local/configs
 
 edit: $(PY_PREFIX)edit env
