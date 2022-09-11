@@ -7,3 +7,5 @@ third-party
 tags
 scripts/workspace
 __pycache__
+.*cache
+*-out
