@@ -8,7 +8,7 @@ ifndef MK_AUTO
 endif
 ###############################################################################
 
-.PHONY: env edit clean py-script-%
+.PHONY: coerce env edit clean py-script-%
 
 .DEFAULT_GOAL := update
 
@@ -39,6 +39,10 @@ py-script-%: | $(VENV_CONC) env
 update: py-script-pull_all
 
 docs: py-script-package_pydoc
+
+coerce:
+	cd $($(PROJ)_DIR) && git pull origin master
+	cd $($(PROJ)_DIR) && git submodule update --init --recursive
 
 clean:
 	@rm -rf $(BUILD_DIR)
