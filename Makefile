@@ -8,7 +8,7 @@ ifndef MK_AUTO
 endif
 ###############################################################################
 
-.PHONY: coerce env edit clean py-script-%
+.PHONY: backups coerce env edit clean py-script-%
 
 .DEFAULT_GOAL := update
 
@@ -20,6 +20,15 @@ $($(PROJ)_DIR)/third-party:
 
 $($(PROJ)_DIR)/local/configs: $(BUILD_DIR)/init.txt
 	ln -s $($(PROJ)_DIR)/vkottler/local/configs $@
+
+$($(PROJ)_DIR)/backups/vkottler-backup%:
+	@mkdir -p $($(PROJ)_DIR)/backups
+	cd $($(PROJ)_DIR)/backups && \
+		git clone git@github.com:vkottler/vkottler-backup$*.git
+
+backups: $($(PROJ)_DIR)/backups/vkottler-backup1 \
+	$($(PROJ)_DIR)/backups/vkottler-backup2 \
+	$($(PROJ)_DIR)/backups/vkottler-backup3
 
 $($(PROJ)_DIR)/scripts/$(PROJ):
 	ln -s $($(PROJ)_DIR)/$(PROJ) $@
