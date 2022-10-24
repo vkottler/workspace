@@ -40,3 +40,6 @@
 [submodule "music"]
 	path = music
 	url = git@github.com:vkottler/music.git
+[submodule "runtimepy"]
+	path = runtimepy
+	url = git@github.com:vkottler/runtimepy.git
