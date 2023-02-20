@@ -43,3 +43,6 @@
 [submodule "runtimepy"]
 	path = runtimepy
 	url = git@github.com:vkottler/runtimepy.git
+[submodule "typescript-package-template"]
+	path = typescript-package-template
+	url = git@github.com:vkottler/typescript-package-template.git
