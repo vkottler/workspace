@@ -32,3 +32,24 @@ elif [ -x /usr/bin/awk ]; then
 else
 	echo "awk not found"
 fi
+
+gcc --version | head -n1
+g++ --version | head -n1
+grep --version | head -n1
+gzip --version | head -n1
+cat /proc/version
+m4 --version | head -n1
+make --version | head -n1
+patch --version | head -n1
+echo "Perl $(perl -V:version)"
+python3 --version
+sed --version | head -n1
+tar --version | head -n1
+makeinfo --version | head -n1 # texinfo version
+xz --version | head -n1
+
+echo 'int main(){}' > dummy.c && g++ -o dummy dummy.c
+if [ -x dummy ]
+	then echo "g++ compilation OK";
+	else echo "g++ compilation failed"; fi
+rm -f dummy.c dummy
