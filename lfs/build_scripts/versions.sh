@@ -1,0 +1,10 @@
+declare -A VERSIONS
+
+VERSIONS[binutils]=2.40
+VERSIONS[gcc]=12.2.0
+VERSIONS[mpfr]=4.2.0
+VERSIONS[gmp]=6.2.1
+VERSIONS[mpc]=1.3.1
+VERSIONS[glibc]=2.37
+
+export VERSIONS

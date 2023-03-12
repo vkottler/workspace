@@ -1,0 +1,2 @@
+LFS_PART=/dev/sda4
+export LFS=/mnt/lfs
