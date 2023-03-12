@@ -16,38 +16,38 @@ done
 
 case $(uname -m) in
   x86_64)
-    sed -e '/m64=/s/lib64/lib/' \
-        -i.orig gcc/config/i386/t-linux64
- ;;
+    sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
+  ;;
 esac
 
-mkdir -vp build
+sed '/thread_header =/s/@.*@/gthr-posix.h/' \
+    -i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
+
+rm -rf build
+mkdir -v build
 pushd build >/dev/null || exit
 
 ../configure \
+    --build="$(../config.guess)" \
+    --host="$LFS_TGT" \
     --target="$LFS_TGT" \
-    --prefix="$LFS/tools" \
-    --with-glibc-version="${VERSIONS[glibc]}" \
-    --with-sysroot="$LFS" \
-    --with-newlib \
-    --without-headers \
+    LDFLAGS_FOR_TARGET=-L"$PWD/$LFS_TGT/libgcc" \
+    --prefix=/usr \
+    --with-build-sysroot="$LFS" \
     --enable-default-pie \
     --enable-default-ssp \
     --disable-nls \
-    --disable-shared \
     --disable-multilib \
-    --disable-threads \
     --disable-libatomic \
     --disable-libgomp \
     --disable-libquadmath \
     --disable-libssp \
     --disable-libvtv \
-    --disable-libstdcxx \
     --enable-languages=c,c++
 
-make_install
+make "-j$(nproc)"
+make DESTDIR="$LFS" install
 
 popd >/dev/null || exit
 
-cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
-	"$(dirname "$("$LFS_TGT-gcc" -print-libgcc-file-name)")"/install-tools/include/limits.h
+ln -sv gcc "$LFS/usr/bin/cc"

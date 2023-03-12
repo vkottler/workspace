@@ -1,3 +1,5 @@
+set -e
+
 double_pop() {
 	popd >/dev/null || exit
 	popd >/dev/null || exit
@@ -17,9 +19,9 @@ unpack_package() {
 
 	if [ ! -d "$slug" ]; then
 		if [ -f "$slug.tar.xz" ]; then
-			tar xvf "$slug.tar.xz"
+			tar xf "$slug.tar.xz"
 		elif [ -f "$slug.tar.gz" ]; then
-			tar xvf "$slug.tar.gz"
+			tar xf "$slug.tar.gz"
 		fi
 	fi
 

@@ -4,8 +4,7 @@ PACKAGE=binutils
 source common.sh
 ensure_unpacked
 
-mkdir -v build
-
+mkdir -vp build
 pushd build >/dev/null || exit
 
 ../configure --prefix="$LFS/tools" \
