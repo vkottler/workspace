@@ -1,10 +1,11 @@
 #!/bin/bash
 
-PACKAGE="file"
+PACKAGE="bc"
 source common.sh
 ensure_unpacked
 
-./configure --prefix=/usr
+CC=gcc ./configure --prefix=/usr -G -O3 -r
+
 make "-j$(nproc)"
-make check
+make test
 make install

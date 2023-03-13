@@ -4,9 +4,8 @@ PACKAGE="m4"
 source common.sh
 ensure_unpacked
 
-./configure --prefix=/usr \
-            --host="$LFS_TGT" \
-            --build="$(build-aux/config.guess)"
+./configure --prefix=/usr
 
 make "-j$(nproc)"
-make DESTDIR="$LFS" install
+make check
+make install

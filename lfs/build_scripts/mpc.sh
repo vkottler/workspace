@@ -1,13 +1,17 @@
 #!/bin/bash
 
-PACKAGE="xz"
+PACKAGE=mpc
 source common.sh
-ensure_unpacked
+ensure_clean_unpacked
 
-./configure --prefix=/usr    \
+./configure --prefix=/usr \
             --disable-static \
             --docdir="/usr/share/doc/$(package_slug $PACKAGE)"
 
 make "-j$(nproc)"
+make html
+
 make check
+
 make install
+make install-html

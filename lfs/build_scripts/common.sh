@@ -38,6 +38,15 @@ ensure_unpacked() {
 	trap double_pop EXIT
 }
 
+ensure_clean_unpacked() {
+	pushd "$LFS/sources" >/dev/null || exit
+
+	rm -rf "$(package_slug "$PACKAGE")"
+	pushd "$(unpack_package "$PACKAGE")" >/dev/null || exit
+
+	trap double_pop EXIT
+}
+
 make_install() {
 	make "-j$(nproc)"
 	make install

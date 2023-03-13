@@ -28,5 +28,21 @@ VERSIONS[perl]=5.36.0
 VERSIONS[Python]=3.11.2
 VERSIONS[texinfo]=7.0.2
 VERSIONS[util-linux]=2.38.1
+VERSIONS[man-pages]=6.03
+VERSIONS[iana-etc]=20230202
+VERSIONS[zlib]=1.2.13
+VERSIONS[bzip2]=1.0.8
+VERSIONS[zstd]=1.5.4
+VERSIONS[readline]=8.2
+VERSIONS[bc]=6.2.4
+VERSIONS[flex]=2.6.4
+VERSIONS[tcl]=8.6.13
+VERSIONS[expect]=5.45.4
+VERSIONS[dejagnu]=1.6.3
+VERSIONS[mpc]=1.3.1
+VERSIONS[attr]=2.5.1
+VERSIONS[acl]=2.3.1
+VERSIONS[libcap]=2.67
+VERSIONS[shadow]=4.13
 
 export VERSIONS

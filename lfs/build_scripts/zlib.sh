@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGE="file"
+PACKAGE=zlib
 source common.sh
 ensure_unpacked
 
@@ -8,3 +8,4 @@ ensure_unpacked
 make "-j$(nproc)"
 make check
 make install
+rm -fv /usr/lib/libz.a
