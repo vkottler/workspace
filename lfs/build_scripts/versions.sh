@@ -22,5 +22,11 @@ VERSIONS[patch]=2.7.6
 VERSIONS[sed]=4.9
 VERSIONS[tar]=1.34
 VERSIONS[xz]=5.4.1
+VERSIONS[gettext]=0.21.1
+VERSIONS[bison]=3.8.2
+VERSIONS[perl]=5.36.0
+VERSIONS[Python]=3.11.2
+VERSIONS[texinfo]=7.0.2
+VERSIONS[util-linux]=2.38.1
 
 export VERSIONS
