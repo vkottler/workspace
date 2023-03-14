@@ -53,5 +53,10 @@ VERSIONS[expat]=2.5.0
 VERSIONS[inetutils]=2.4
 VERSIONS[less]=608
 VERSIONS[XML-Parser]=2.46
+VERSIONS[intltool]=0.51.0
+VERSIONS[autoconf]=2.71
+VERSIONS[automake]=1.16.5
+VERSIONS[openssl]=3.0.8
+VERSIONS[kmod]=30
 
 export VERSIONS
