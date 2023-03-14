@@ -1,9 +1,8 @@
 #!/bin/bash
 
-PACKAGE=bison
+PACKAGE=gperf
 source common.sh
-ensure_clean_unpacked
+ensure_unpacked
 
 ./configure --prefix=/usr --docdir="$DOCDIR"
-
 make_check_install

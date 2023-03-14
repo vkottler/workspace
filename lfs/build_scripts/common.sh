@@ -11,6 +11,12 @@ package_slug() {
 	echo "$1-${VERSIONS[$1]}"
 }
 
+SLUG="$(package_slug "$PACKAGE")"
+test "$SLUG"
+
+DOCDIR="/usr/share/doc/$SLUG"
+test "$DOCDIR"
+
 unpack_package() {
 	local slug
 	slug=$(package_slug "$1")
@@ -41,13 +47,29 @@ ensure_unpacked() {
 ensure_clean_unpacked() {
 	pushd "$LFS/sources" >/dev/null || exit
 
-	rm -rf "$(package_slug "$PACKAGE")"
+	rm -rf "$SLUG"
 	pushd "$(unpack_package "$PACKAGE")" >/dev/null || exit
 
 	trap double_pop EXIT
 }
 
-make_install() {
+make_nproc() {
 	make "-j$(nproc)"
+}
+
+make_install() {
+	make_nproc
+	make install
+}
+
+make_check_install() {
+	make_nproc
+	make check
+	make install
+}
+
+make_test_install() {
+	make_nproc
+	make test
 	make install
 }

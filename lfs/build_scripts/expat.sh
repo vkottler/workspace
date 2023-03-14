@@ -1,8 +1,8 @@
 #!/bin/bash
 
-PACKAGE=gettext
+PACKAGE=expat
 source common.sh
-ensure_clean_unpacked
+ensure_unpacked
 
 ./configure --prefix=/usr    \
             --disable-static \
@@ -10,4 +10,4 @@ ensure_clean_unpacked
 
 make_check_install
 
-chmod -v 0755 /usr/lib/preloadable_libintl.so
+install -v -m644 doc/*.{html,css} "$DOCDIR"

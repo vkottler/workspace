@@ -44,5 +44,14 @@ VERSIONS[attr]=2.5.1
 VERSIONS[acl]=2.3.1
 VERSIONS[libcap]=2.67
 VERSIONS[shadow]=4.13
+VERSIONS[pkg-config]=0.29.2
+VERSIONS[psmisc]=23.6
+VERSIONS[libtool]=2.4.7
+VERSIONS[gdbm]=1.23
+VERSIONS[gperf]=3.1
+VERSIONS[expat]=2.5.0
+VERSIONS[inetutils]=2.4
+VERSIONS[less]=608
+VERSIONS[XML-Parser]=2.46
 
 export VERSIONS

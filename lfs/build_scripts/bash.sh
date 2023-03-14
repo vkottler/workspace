@@ -2,14 +2,11 @@
 
 PACKAGE=bash
 source common.sh
-ensure_unpacked
+ensure_clean_unpacked
 
-./configure --prefix=/usr \
-            --build="$(sh support/config.guess)" \
-            --host="$LFS_TGT" \
-            --without-bash-malloc
+./configure --prefix=/usr             \
+            --without-bash-malloc     \
+            --with-installed-readline \
+            --docdir="$DOCDIR"
 
-make "-j$(nproc)"
-make DESTDIR="$LFS" install
-
-ln -sv bash "$LFS/bin/sh"
+make_install

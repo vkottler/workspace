@@ -2,33 +2,34 @@
 
 PACKAGE=ncurses
 source common.sh
-ensure_unpacked
-
-sed -i s/mawk// configure
-
-mkdir -vp build
-pushd build >/dev/null || exit
-
-../configure
-make "-j$(nproc)" -C include
-make "-j$(nproc)" -C progs tic
-
-popd >/dev/null || exit
+ensure_clean_unpacked
 
 ./configure --prefix=/usr \
-            --host="$LFS_TGT" \
-            --build="$(./config.guess)" \
             --mandir=/usr/share/man \
-            --with-manpage-format=normal \
             --with-shared \
+            --without-debug \
             --without-normal \
             --with-cxx-shared \
-            --without-debug \
-            --without-ada \
-            --disable-stripping \
-            --enable-widec
+            --enable-pc-files \
+            --enable-widec \
+            --with-pkg-config-libdir=/usr/lib/pkgconfig
 
 make "-j$(nproc)"
 
-make DESTDIR="$LFS" TIC_PATH="$(pwd)/build/progs/tic" install
-echo "INPUT(-lncursesw)" > "$LFS/usr/lib/libncurses.so"
+make DESTDIR="$PWD/dest" install
+install -vm755 dest/usr/lib/libncursesw.so.6.4 /usr/lib
+rm -v  dest/usr/lib/libncursesw.so.6.4
+cp -av dest/* /
+
+for lib in ncurses form panel menu ; do
+    rm -vf                    /usr/lib/lib${lib}.so
+    echo "INPUT(-l${lib}w)" > /usr/lib/lib${lib}.so
+    ln -sfv ${lib}w.pc        /usr/lib/pkgconfig/${lib}.pc
+done
+
+rm -vf                     /usr/lib/libcursesw.so
+echo "INPUT(-lncursesw)" > /usr/lib/libcursesw.so
+ln -sfv libncurses.so      /usr/lib/libcurses.so
+
+mkdir -pv      "/usr/share/doc/$(package_slug $PACKAGE)"
+cp -v -R doc/* "/usr/share/doc/$(package_slug $PACKAGE)"

@@ -28,7 +28,7 @@ make "-j$(nproc)"
 ulimit -s 32768
 
 chown -Rv tester .
-su tester -c "PATH=$PATH make -k check"
+su tester -c "PATH=$PATH make -k check" || true
 ../contrib/test_summary | grep -A7 Summ
 
 read -pr "Continue?"

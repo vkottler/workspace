@@ -2,10 +2,10 @@
 
 PACKAGE="grep"
 source common.sh
-ensure_unpacked
+ensure_clean_unpacked
 
-./configure --prefix=/usr \
-            --host="$LFS_TGT"
+sed -i "s/echo/#echo/" src/egrep.sh
 
-make "-j$(nproc)"
-make DESTDIR="$LFS" install
+./configure --prefix=/usr
+
+make_check_install
