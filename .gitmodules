@@ -46,3 +46,6 @@
 [submodule "typescript-package-template"]
 	path = typescript-package-template
 	url = git@github.com:vkottler/typescript-package-template.git
+[submodule "rcmpy"]
+	path = rcmpy
+	url = git@github.com:vkottler/rcmpy.git
