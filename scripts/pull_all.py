@@ -34,12 +34,24 @@ def repo_entry(
 
     # If it has a 'manifest.yaml' run datazen.
     repo_root = Path(str(repo.working_tree_dir))
+
     if repo_root.joinpath("manifest.yaml").is_file():
         try:
             result = run(["mk", "-C", str(repo_root), "dz-sync"], check=True)
             print(f"Syncing datazen result: {result.returncode}.")
         except CalledProcessError as exc:
             print(f"Failed to sync datazen ({repo_root.name}): {exc}")
+
+    deps = repo_root.joinpath("im", "pydeps.svg")
+    if deps.is_file():
+        try:
+            deps.unlink()
+            result = run(
+                ["mk", "-C", str(repo_root), "python-deps"], check=True
+            )
+            print(f"Generating pydeps result: {result.returncode}.")
+        except CalledProcessError as exc:
+            print(f"Failed to generate pydeps ({repo_root.name}): {exc}")
 
     print(f"Status for '{repo_root.name}':")
     for diff in repo.index.diff(None):

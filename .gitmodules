@@ -10,9 +10,6 @@
 [submodule "vmklib"]
 	path = vmklib
 	url = git@github.com:vkottler/vmklib.git
-[submodule "vtelem"]
-	path = vtelem
-	url = git@github.com:vkottler/vtelem.git
 [submodule "vkottler.github.io"]
 	path = vkottler.github.io
 	url = git@github.com:vkottler/vkottler.github.io.git
@@ -49,3 +46,9 @@
 [submodule "rcmpy"]
 	path = rcmpy
 	url = git@github.com:vkottler/rcmpy.git
+[submodule "userfs"]
+	path = userfs
+	url = git@github.com:vkottler/userfs.git
+[submodule "yambs"]
+	path = yambs
+	url = git@github.com:vkottler/yambs.git
