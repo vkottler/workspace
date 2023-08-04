@@ -9,18 +9,20 @@ from multiprocessing import Pool
 from os import linesep, walk
 from os.path import join
 from pathlib import Path
-from shutil import move, rmtree
+from shutil import copytree, move, rmtree
 import sys
-from typing import Iterator, Tuple
+from typing import Iterator, List, Tuple
 
 # third-party
 from git import Repo
 
 # internal
-from workspace.cmd import python_cmd
+from workspace.cmd import mk_cmd, python_cmd
 from workspace.git import get_python_submodules
 
-PYDOC_DEST = Path.cwd().joinpath("vkottler.github.io", "python", "pydoc")
+PYTHON_DOC_ROOT = Path.cwd().joinpath("vkottler.github.io", "python")
+PYDOC_DEST = PYTHON_DOC_ROOT.joinpath("pydoc")
+SPHINX_DEST = PYTHON_DOC_ROOT.joinpath("sphinx")
 
 
 def python_sources(root: Path, pkg_slug: str) -> Iterator[Tuple[Path, Path]]:
@@ -35,6 +37,20 @@ def python_sources(root: Path, pkg_slug: str) -> Iterator[Tuple[Path, Path]]:
                     yield (py_file, overlap)
 
 
+def generate_sphinx_docs(root: Path, sphinx: Path) -> None:
+    """Generate sphinx documentation."""
+
+    mk_cmd(["docs"], root, check=True)
+
+    dest = sphinx.joinpath(root.name)
+
+    # Always completely re-generate the output.
+    rmtree(dest, ignore_errors=True)
+
+    # Copy outputs.
+    copytree(root.joinpath("docs", "_build"), dest)
+
+
 def repo_entry(
     repo: Repo,
 ) -> None:
@@ -42,6 +58,8 @@ def repo_entry(
 
     root = Path(str(repo.working_tree_dir))
     pkg_slug = root.name.replace("-", "_")
+
+    generate_sphinx_docs(root, SPHINX_DEST)
 
     for source, _ in python_sources(root, pkg_slug):
         try:
@@ -80,7 +98,14 @@ def repo_entry(
             source_html.unlink(True)
 
 
-def create_index(dest: Path) -> None:
+def sphinx_index(sphinx: Path, repos: List[Repo]) -> None:
+    """Create an index HTML for the sphinx documentation."""
+
+    print(sphinx)
+    print(repos)
+
+
+def create_index(dest: Path, sphinx: Path) -> None:
     """Create the index.html file in the destination."""
 
     # Always completely re-generate the output.
@@ -89,6 +114,8 @@ def create_index(dest: Path) -> None:
 
     symlinks = []
 
+    sphinx_repos: List[Repo] = []
+
     # Prepare to generate an index.html in the root.
     for submodule in get_python_submodules(Path.cwd()):
         root = Path(str(submodule.working_tree_dir))
@@ -96,6 +123,10 @@ def create_index(dest: Path) -> None:
         symlink = dest.joinpath(slug)
         symlink.symlink_to(root.joinpath(slug), True)
         symlinks.append(symlink)
+
+        sphinx_repos.append(submodule)
+
+    sphinx_index(sphinx, sphinx_repos)
 
     # Generate an __init__.html and move it to index.html.
     init = dest.joinpath("__init__.py")
@@ -121,7 +152,7 @@ def create_index(dest: Path) -> None:
 def main() -> int:
     """Script entry."""
 
-    create_index(PYDOC_DEST)
+    create_index(PYDOC_DEST, SPHINX_DEST)
     with Pool() as pool:
         pool.map(repo_entry, get_python_submodules(Path.cwd()))
 

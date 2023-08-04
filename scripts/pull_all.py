@@ -14,6 +14,7 @@ import sys
 from git import Repo
 
 # internal
+from workspace.cmd import mk_cmd
 from workspace.git import (
     DEFAULT_MAIN_BRANCH,
     DEFAULT_ORIGIN,
@@ -46,12 +47,10 @@ def repo_entry(
     if deps.is_file():
         try:
             deps.unlink()
-            result = run(
-                ["mk", "-C", str(repo_root), "python-deps"], check=True
-            )
-            print(f"Generating pydeps result: {result.returncode}.")
+            result = mk_cmd(["docs python-deps"], repo_root, check=True)
+            print(f"Generating docs/pydeps result: {result.returncode}.")
         except CalledProcessError as exc:
-            print(f"Failed to generate pydeps ({repo_root.name}): {exc}")
+            print(f"Failed to generate docs/pydeps ({repo_root.name}): {exc}")
 
     print(f"Status for '{repo_root.name}':")
     for diff in repo.index.diff(None):
