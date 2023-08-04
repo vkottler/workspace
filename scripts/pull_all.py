@@ -44,13 +44,13 @@ def repo_entry(
             print(f"Failed to sync datazen ({repo_root.name}): {exc}")
 
     deps = repo_root.joinpath("im", "pydeps.svg")
-    if deps.is_file():
+    if deps.is_file() or repo_root.joinpath("pyproject.toml").is_file():
         try:
-            deps.unlink()
-            result = mk_cmd(["docs python-deps"], repo_root, check=True)
-            print(f"Generating docs/pydeps result: {result.returncode}.")
+            deps.unlink(missing_ok=True)
+            result = mk_cmd(["python-deps"], repo_root, check=True)
+            print(f"Generating pydeps result: {result.returncode}.")
         except CalledProcessError as exc:
-            print(f"Failed to generate docs/pydeps ({repo_root.name}): {exc}")
+            print(f"Failed to generate pydeps ({repo_root.name}): {exc}")
 
     print(f"Status for '{repo_root.name}':")
     for diff in repo.index.diff(None):
