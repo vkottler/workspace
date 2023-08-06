@@ -40,15 +40,12 @@ def python_sources(root: Path, pkg_slug: str) -> Iterator[Tuple[Path, Path]]:
 def generate_sphinx_docs(root: Path, sphinx: Path) -> None:
     """Generate sphinx documentation."""
 
+    # Clean docs and re-generate.
+    mk_cmd(["clean-docs"], root, check=True)
     mk_cmd(["docs"], root, check=True)
 
-    dest = sphinx.joinpath(root.name)
-
-    # Always completely re-generate the output.
-    rmtree(dest, ignore_errors=True)
-
     # Copy outputs.
-    copytree(root.joinpath("docs", "_build"), dest)
+    copytree(root.joinpath("docs", "_build"), sphinx.joinpath(root.name))
 
 
 def repo_entry(
@@ -101,7 +98,10 @@ def repo_entry(
 def sphinx_index(sphinx: Path, repos: List[Repo]) -> None:
     """Create an index HTML for the sphinx documentation."""
 
-    print(sphinx)
+    # Always completely re-generate the output.
+    rmtree(sphinx, ignore_errors=True)
+    sphinx.mkdir(parents=True)
+
     print(repos)
 
 
