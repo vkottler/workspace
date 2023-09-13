@@ -28,7 +28,8 @@ $($(PROJ)_DIR)/backups/vkottler-backup%:
 
 backups: $($(PROJ)_DIR)/backups/vkottler-backup1 \
 	$($(PROJ)_DIR)/backups/vkottler-backup2 \
-	$($(PROJ)_DIR)/backups/vkottler-backup3
+	$($(PROJ)_DIR)/backups/vkottler-backup3 \
+	$($(PROJ)_DIR)/backups/vkottler-backup4
 
 $($(PROJ)_DIR)/scripts/$(PROJ):
 	ln -s $($(PROJ)_DIR)/$(PROJ) $@

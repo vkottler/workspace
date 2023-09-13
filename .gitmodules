@@ -52,3 +52,6 @@
 [submodule "yambs"]
 	path = yambs
 	url = git@github.com:vkottler/yambs.git
+[submodule "conntextual"]
+	path = conntextual
+	url = git@github.com:vkottler/conntextual.git
