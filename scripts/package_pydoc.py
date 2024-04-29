@@ -10,6 +10,7 @@ from os import linesep, walk
 from os.path import join
 from pathlib import Path
 from shutil import copytree, move, rmtree
+from subprocess import CalledProcessError
 import sys
 from typing import Iterator, List, Tuple
 
@@ -76,21 +77,26 @@ def repo_entry(
                 src_arg = f"{src_arg}.{Path(source.name).stem}"
 
             # Write the documentation and obtain the path to the output.
-            python_cmd(
-                ["-w", src_arg],
-                "pydoc",
-                root=root,
-                location=root,
-            )
+            try:
+                python_cmd(
+                    ["-w", src_arg],
+                    "pydoc",
+                    root=root,
+                    location=root,
+                )
 
-            source_html_name = Path(f"{src_arg}.html")
-            source_html = root.joinpath(source_html_name)
+                source_html_name = Path(f"{src_arg}.html")
+                source_html = root.joinpath(source_html_name)
 
-            dest_html = Path(PYDOC_DEST, source_html.name)
-            dest_html.unlink(True)
+                dest_html = Path(PYDOC_DEST, source_html.name)
+                dest_html.unlink(True)
 
-            # Move the generated file to the intended destination.
-            move(str(source_html), str(dest_html))
+                # Move the generated file to the intended destination.
+                move(str(source_html), str(dest_html))
+            except CalledProcessError as exc:
+                print("Couldn't generate '{src_arg}':")
+                print(exc)
+
         finally:
             source_html.unlink(True)
 
