@@ -12,6 +12,7 @@ import sys
 
 # third-party
 from git import Repo
+from git.exc import GitCommandError
 
 # internal
 from workspace.cmd import mk_cmd
@@ -30,33 +31,39 @@ def repo_entry(
 ) -> None:
     """Perform common tasks on a workspace repository."""
 
-    # Update the repository.
-    repo_fetcher(repo, remote, main_branch)
+    try:
+        # Update the repository.
+        repo_fetcher(repo, remote, main_branch)
 
-    # If it has a 'manifest.yaml' run datazen.
-    repo_root = Path(str(repo.working_tree_dir))
+        # If it has a 'manifest.yaml' run datazen.
+        repo_root = Path(str(repo.working_tree_dir))
 
-    if repo_root.joinpath("manifest.yaml").is_file():
-        try:
-            result = run(["mk", "-C", str(repo_root), "dz-sync"], check=True)
-            print(f"Syncing datazen result: {result.returncode}.")
-        except CalledProcessError as exc:
-            print(f"Failed to sync datazen ({repo_root.name}): {exc}")
+        if repo_root.joinpath("manifest.yaml").is_file():
+            try:
+                result = run(
+                    ["mk", "-C", str(repo_root), "dz-sync"], check=True
+                )
+                print(f"Syncing datazen result: {result.returncode}.")
+            except CalledProcessError as exc:
+                print(f"Failed to sync datazen ({repo_root.name}): {exc}")
 
-    deps = repo_root.joinpath("im", "pydeps.svg")
-    if deps.is_file() or repo_root.joinpath("pyproject.toml").is_file():
-        try:
-            deps.unlink(missing_ok=True)
-            result = mk_cmd(["python-deps"], repo_root, check=True)
-            print(f"Generating pydeps result: {result.returncode}.")
-        except CalledProcessError as exc:
-            print(f"Failed to generate pydeps ({repo_root.name}): {exc}")
+        deps = repo_root.joinpath("im", "pydeps.svg")
+        if deps.is_file() or repo_root.joinpath("pyproject.toml").is_file():
+            try:
+                deps.unlink(missing_ok=True)
+                result = mk_cmd(["python-deps"], repo_root, check=True)
+                print(f"Generating pydeps result: {result.returncode}.")
+            except CalledProcessError as exc:
+                print(f"Failed to generate pydeps ({repo_root.name}): {exc}")
 
-    print(f"Status for '{repo_root.name}':")
-    for diff in repo.index.diff(None):
-        print(diff)
-    if repo.untracked_files:
-        print(repo.untracked_files)
+        print(f"Status for '{repo_root.name}':")
+        for diff in repo.index.diff(None):
+            print(diff)
+        if repo.untracked_files:
+            print(repo.untracked_files)
+    except GitCommandError as exc:
+        print(f"Error processing '{repo}':")
+        print(exc)
 
 
 def main() -> int:

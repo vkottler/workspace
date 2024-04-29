@@ -55,3 +55,6 @@
 [submodule "conntextual"]
 	path = conntextual
 	url = git@github.com:vkottler/conntextual.git
+[submodule "quasimoto"]
+	path = quasimoto
+	url = git@github.com:vkottler/quasimoto.git
